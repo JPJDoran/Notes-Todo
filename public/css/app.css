@@ -10002,3 +10002,20 @@ h3 {
     border-color: #dee2e6;
   }
 }
+.img-profile {
+  height: 2rem;
+  width: 2rem;
+}
+
+.rounded-circle {
+  height: 1.5rem;
+  width: 1.5rem;
+  text-align: center;
+  background: none;
+}
+.rounded-circle:hover {
+  text-decoration: none;
+}
+.rounded-circle:focus {
+  outline: none;
+}

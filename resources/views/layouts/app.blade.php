@@ -54,6 +54,10 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    @if (!is_null(session('profile_img')))
+                                        <img class="img-profile rounded-circle" src="{{ session()->get('profile_img') }}">
+                                    @endif
+
                                     {{ Auth::user()->name }}
                                 </a>
 

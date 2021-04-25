@@ -1,0 +1,19 @@
+.img-profile {
+    height: 2rem;
+    width: 2rem;
+}
+
+.rounded-circle {
+    height: 1.5rem;
+    width: 1.5rem;
+    text-align: center;
+    background: none;
+
+    &:hover {
+        text-decoration: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+}
