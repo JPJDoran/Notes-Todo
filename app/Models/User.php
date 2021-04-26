@@ -44,4 +44,19 @@ class User extends Authenticatable
     public function ProfileImage() {
         return $this->hasOne('App\Models\ProfileImage');
     }
+
+    public function Categories() {
+        return $this->hasMany('App\Models\Category');
+    }
+
+    public function Lists() {
+        return $this->hasManyThrough(
+            'App\Models\TodoList',
+            'App\Models\Category',
+            'user_id', // Foreign key on categories table
+            'category_id', // Foreign key on lists table
+            'id', // Local key on user table
+            'id' // Local key on categories table
+        );
+    }
 }

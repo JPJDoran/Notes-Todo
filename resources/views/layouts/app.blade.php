@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="https://kit.fontawesome.com/176870990a.js" crossorigin="anonymous"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -79,8 +80,9 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="col p-4">
             @yield('content')
+            @yield('modals')
         </main>
     </div>
 </body>

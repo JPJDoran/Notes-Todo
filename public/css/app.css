@@ -10019,3 +10019,7 @@ h3 {
 .rounded-circle:focus {
   outline: none;
 }
+
+.strikethrough {
+  text-decoration: line-through;
+}

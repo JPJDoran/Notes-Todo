@@ -18,6 +18,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
             'App\Listeners\GenerateProfileImage',
+            'App\Listeners\GenerateExampleList',
         ],
 
         'Illuminate\Auth\Events\Login' => [
