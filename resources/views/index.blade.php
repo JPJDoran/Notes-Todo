@@ -37,6 +37,10 @@
                                     </li>
                                 @endforeach
                             </ul>
+                        @else
+                            <div class="alert alert-warning" role="alert">
+                                @lang('todo.no-categories')
+                            </div>
                         @endif
                     </div>
                 </div>
@@ -48,11 +52,13 @@
                             <div class="col">
                                 <h3 class="card-title">@lang('todo.lists')</h3>
                             </div>
-                            <div class="col text-right">
-                                <button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#add-list-modal">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
+                            @if (!empty($category))
+                                <div class="col text-right">
+                                    <button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#add-list-modal">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            @endif
                         </div>
                         <div class="alert alert-secondary mb-0 d-none" role="alert" id="category-loading-spinner">
                             <p class="mb-0 pb-0">
@@ -62,7 +68,7 @@
                         <div data-target="category-container">
                             @if (empty($category))
                                 <div class="alert alert-warning" role="alert">
-                                    @lang('todo.no-categories')
+                                    @lang('todo.category-required')
                                 </div>
                             @else
                                 {!! $listsPartial !!}

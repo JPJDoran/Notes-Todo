@@ -21,6 +21,7 @@ return [
     'edit-category' => 'Edit Category',
     'edit-item' => 'Edit Item',
     'edit-list' => 'Edit List',
-    'global-error' => 'Sorry there was an error performing that action, please try again later.'
+    'global-error' => 'Sorry there was an error performing that action, please try again later.',
+    'category-required' => 'You must create a category first.',
 
 ];

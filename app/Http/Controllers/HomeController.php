@@ -34,19 +34,24 @@ class HomeController extends Controller
     public function index($categoryId = null) {
         $categories = $this->user->Categories;
         $category = $categories->first();
-        $lists = null;
+        $lists = collect();
+        $listId = null;
+        $chosenCategory = $categoryId ?? $categories->first()->id ?? 0;
 
         if (!is_null($categoryId)) {
             $category = $categories->find($categoryId);
         }
 
-        if (is_null($category)) {
+        if (!is_null($categoryId) && is_null($category)) {
             abort('404');
         }
 
-        $lists = $category->Lists;
-        $listId = $category->Lists->first() ? $category->Lists->first()->id : 0;
-        $chosenCategory = $categoryId ?? $categories->first()->id ?? 0;
+        $lists = $category->Lists ?? collect();
+
+        if ($lists->isNotEmpty()) {
+            $listId = $category->Lists->first() ? $category->Lists->first()->id : 0;
+        }
+
         $listsPartial = view('todo/partials/categoryLists', compact('lists', 'listId'))->render();
 
         return view('index', compact('categories', 'listsPartial', 'chosenCategory'));
