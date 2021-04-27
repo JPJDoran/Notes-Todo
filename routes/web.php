@@ -27,4 +27,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/todo/getCategory/{id}', [HomeController::class, 'getCategory']);
     Route::get('/todo/getList/{id}', [HomeController::class, 'getList']);
     Route::get('/todo/getItem/{id}', [HomeController::class, 'getItem']);
+
+    // Delete routes
+    Route::post('/todo/deleteCategory', [HomeController::class, 'deleteCategory']);
+    Route::post('/todo/deleteList', [HomeController::class, 'deleteList']);
+    Route::post('/todo/deleteItem', [HomeController::class, 'deleteItem']);
 });

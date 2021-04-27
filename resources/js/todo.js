@@ -267,6 +267,7 @@ $(document).ready(function() {
             }
 
             $form.find('input[name="title"]').val(data.list.title);
+            $form.find('input[name="categoryId"]').val(data.list.category_id);
             $('#edit-list-modal').modal('show');
         });
     });
@@ -340,6 +341,8 @@ $(document).ready(function() {
             }
 
             $form.find('input[name="title"]').val(data.item.title);
+            $form.find('input[name="listId"]').val(data.item.list_id);
+            $form.find('input[name="done"]').val(data.item.done);
             $('#edit-item-modal').modal('show');
         });
     });
@@ -387,7 +390,85 @@ $(document).ready(function() {
                 return;
             }
 
-            refreshItems(listId);
+            refreshItems(listId, 'edit-item');
+        });
+    });
+
+    // User wants to delete a category
+    $('body').on('click tap', '[data-trigger="delete-category"]', function(event) {
+        event.preventDefault();
+
+        let $form = $('#edit-category-form');
+        let categoryId = $form.find('input[name="categoryId"]').val();
+
+        $.ajax({
+            url: '/todo/deleteCategory',
+            type: 'POST',
+            dataType: 'JSON',
+            data: { categoryId },
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        }).done(function(data) {
+            if (data.error) {
+                // Show global error?
+                return;
+            }
+
+            window.location = '/';
+        });
+    });
+
+    // User wants to delete a list
+    $('body').on('click tap', '[data-trigger="delete-list"]', function(event) {
+        event.preventDefault();
+
+        let $form = $('#edit-list-form');
+        let listId = $form.find('input[name="listId"]').val();
+        let categoryId = $form.find('input[name="categoryId"]').val();
+
+        $.ajax({
+            url: '/todo/deleteList',
+            type: 'POST',
+            dataType: 'JSON',
+            data: { listId },
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        }).done(function(data) {
+            if (data.error) {
+                // Show global error?
+                return;
+            }
+
+            refreshLists(categoryId, listId);
+        });
+    });
+
+    // User wants to delete an item
+    $('body').on('click tap', '[data-trigger="delete-item"]', function(event) {
+        event.preventDefault();
+
+        let $form = $('#edit-item-form');
+        let listId = $form.find('input[name="listId"]').val();
+        let itemId = $form.find('input[name="itemId"]').val();
+        let done = $form.find('input[name="done"]').val();
+
+        $.ajax({
+            url: '/todo/deleteItem',
+            type: 'POST',
+            dataType: 'JSON',
+            data: { itemId },
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        }).done(function(data) {
+            if (data.error) {
+                // Show global error?
+                return;
+            }
+
+            refreshItems(listId, 'delete-item', done);
         });
     });
 });
@@ -418,21 +499,45 @@ function updateListItemCount(listId, action, done = false) {
     let $ele;
     let $container = $('body').find(`[data-target="list-count-container-${listId}"]`);
 
-    if (action == 'status') {
-        $ele = $('body').find(`[data-target="list-item-done-count-${listId}"]`);
-        count = parseInt($ele.html());
-        count = done == 1 ? count+1 : count-1;
-        $ele.html(count);
-    } else {
-        $ele = $('body').find(`[data-target="list-item-count-${listId}"]`);
-        count = parseInt($ele.html());
-        $ele.html(count+1);
-    }
+    switch (action) {
+        case 'status':
+            $ele = $('body').find(`[data-target="list-item-done-count-${listId}"]`);
+            count = parseInt($ele.html());
+            count = done == 1 ? count+1 : count-1;
+            $ele.html(count);
+            $container.removeClass('d-none');
+            break;
+        case 'add-item':
+            $ele = $('body').find(`[data-target="list-item-count-${listId}"]`);
+            count = parseInt($ele.html());
+            $ele.html(count+1);
+            $container.removeClass('d-none');
+            break;
+        case 'delete-item':
+            // If the item was complete decrease the completed count
+            if (done == 1) {
+                $ele = $('body').find(`[data-target="list-item-done-count-${listId}"]`);
+                count = parseInt($ele.html());
+                $ele.html(count-1);
+            }
 
-    $container.removeClass('d-none');
+            // Decrease the overall count
+            $ele = $('body').find(`[data-target="list-item-count-${listId}"]`);
+            count = parseInt($ele.html());
+            $ele.html(count-1);
+
+            // If count == 0 hide the count text
+            if (count-1 == 0) {
+                $container.addClass('d-none');
+            }
+
+            break;
+        default:
+            break;
+    }
 }
 
-function refreshItems(listId) {
+function refreshItems(listId, action = 'add-item', done = false) {
     let $itemsContainer = $(`#list-${listId}`).find('[data-target="items-container"]');
     let $spinner = $(`#loading-spinner-${listId}`);
 
@@ -460,10 +565,11 @@ function refreshItems(listId) {
         $itemsContainer.removeClass('d-none');
 
         // Update item count
-        updateListItemCount(listId, 'add-item')
+        updateListItemCount(listId, action, done)
 
         // Close modal
         $('#add-item-modal').modal('hide');
+        $('#edit-item-modal').modal('hide');
     });
 }
 

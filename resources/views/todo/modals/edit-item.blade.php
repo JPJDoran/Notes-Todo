@@ -12,7 +12,9 @@
                     <p class="mb-0 pb-0">@lang('todo.form-error')</p>
                 </div>
                 <form id="edit-item-form">
+                    <input type="hidden" name="listId">
                     <input type="hidden" name="itemId">
+                    <input type="hidden" name="done">
                     <div class="form-group">
                         <label for="edit-item-title">@lang('todo.item-title')</label>
                         <input type="text" class="form-control" id="edit-item-title" name="title" placeholder="E.g. Cook dinner" required>

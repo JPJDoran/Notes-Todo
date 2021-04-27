@@ -12,6 +12,7 @@
                     <p class="mb-0 pb-0">@lang('todo.form-error')</p>
                 </div>
                 <form id="edit-list-form">
+                    <input type="hidden" name="categoryId">
                     <input type="hidden" name="listId">
                     <div class="form-group">
                         <label for="edit-list-title">@lang('todo.list-title')</label>

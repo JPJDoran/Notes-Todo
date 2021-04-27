@@ -356,4 +356,102 @@ class HomeController extends Controller
 
         return response()->json(['error' => false]);
     }
+
+    /**
+     * Delete a category
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function deleteCategory(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        if (is_null($categoryId = $request->categoryId)) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        if (is_null($category = $this->user->Categories->find($categoryId))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        // Delete the category
+        Category::destroy($categoryId);
+
+        // Get all lists that belonged to that category
+        $lists = TodoList::where('category_id', $categoryId);
+
+        // Delete all items that belonged to the lists
+        foreach ($lists as $list) {
+            TodoItem::where('list_id', $list->id)->delete();
+        }
+
+        // Delete all the lists
+        $lists->delete();
+
+        return response()->json(['error' => false]);
+    }
+
+    /**
+     * Delete a list
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function deleteList(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        if (is_null($listId = $request->listId)) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        if (is_null($list = $this->user->Lists->find($listId))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        // Delete the list
+        TodoList::destroy($listId);
+
+        // Delete the items that belonged to the list
+        TodoItem::where('list_id', $listId)->delete();
+
+        return response()->json(['error' => false]);
+    }
+
+    /**
+     * Delete an item
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function deleteItem(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        if (is_null($itemId = $request->itemId)) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        if (is_null($item = TodoItem::find($itemId))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        if (is_null($list = $item->TodoList)) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        if (is_null($category = $list->Category)) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        if ($category->user_id != $this->user->id) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        // Delete the list
+        TodoItem::destroy($itemId);
+
+        return response()->json(['error' => false]);
+    }
 }
