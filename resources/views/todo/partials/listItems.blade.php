@@ -5,7 +5,7 @@
 @else
     @foreach ($list->Items as $item)
         <div class="form-check mt-3 mb-3">
-            <input class="form-check-input" type="checkbox" id="item-{{ $item->id }}" data-id="{{ $item->id }}" data-trigger="complete-item" {{ $item->done ? 'checked' : '' }}>
+            <input class="form-check-input" type="checkbox" id="item-{{ $item->id }}" data-id="{{ $item->id }}" data-list-id="{{ $list->id }}" data-trigger="complete-item" {{ $item->done ? 'checked' : '' }}>
             <label class="form-check-label {{ $item->done ? 'strikethrough' : '' }}" for="item-{{ $item->id }}">
                 {{ $item->title }}
             </label>

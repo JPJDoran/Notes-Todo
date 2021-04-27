@@ -83,15 +83,8 @@ $(document).ready(function() {
         $('body').find('.help-block').addClass('d-none');
     });
 
-    // User wants to swap between list categories
-    $('body').on('click tap', '[data-trigger="category-item"]', function(event) {
-        event.preventDefault();
-
-        console.log($(this).attr('data-id'));
-    });
-
     // User wants to add a new list
-    // On submit of add task
+    // On submit of add list
     $('#add-list-form').on('submit', function(event) {
         event.preventDefault();
 
@@ -135,6 +128,50 @@ $(document).ready(function() {
             refreshLists(categoryId, data.id);
         });
     });
+
+    // User wants to add a new list
+    // On submit of add list
+    $('#add-category-form').on('submit', function(event) {
+        event.preventDefault();
+
+        let $alert = $('#add-category-error');
+        let form = document.getElementById('add-category-form');
+        let formData = new FormData(form);
+
+        // Hide existing messages
+        $('body').find('[data-target="add-category-alert"]').addClass('d-none');
+        $('body').find('.help-block').addClass('d-none');
+
+        $.ajax({
+            url: '/todo/addCategory',
+            type: 'POST',
+            dataType: 'JSON',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        }).done(function(data) {
+            if (data.error) {
+                // Show errors
+                $alert.find('p').html(data.message);
+
+                if (data.hasOwnProperty('validation')) {
+                    $.each(data.validation, function(index, val) {
+                        $validation = $('body').find(`[data-target="${index}-errors"]`);
+                        $validation.find('strong').html(val);
+                        $validation.removeClass('d-none');
+                    });
+                }
+
+                $alert.removeClass('d-none');
+                return;
+            }
+
+            window.location = `/${data.id}`;
+        });
+    });
 });
 
 function updateItem(id, done, listId) {
@@ -161,7 +198,7 @@ function updateItem(id, done, listId) {
 function updateListItemCount(listId, action, done = false) {
     let count;
     let $ele;
-    let $container = $('body').find('[data-target="list-count-container"]');
+    let $container = $('body').find(`[data-target="list-count-container-${listId}"]`);
 
     if (action == 'status') {
         $ele = $('body').find(`[data-target="list-item-done-count-${listId}"]`);

@@ -1,17 +1,17 @@
-@if ($category->Lists->isEmpty())
+@if ($lists->isEmpty())
     <div class="alert alert-warning" role="alert">
         @lang('todo.no-lists')
     </div>
 @else
     <div class="accordion" id="list-accordion">
-        @foreach ($category->Lists as $key => $list)
+        @foreach ($lists as $key => $list)
             <div class="card">
                 <div class="card-header" id="list-title-{{ $list->id }}">
                     <h2 class="mb-0">
                         <button class="btn btn-link p-0" type="button" data-toggle="collapse" data-target="#list-{{ $list->id }}" aria-expanded="true" aria-controls="list-{{ $list->id }}">
                             {{ $list->title }}
 
-                            <span class="{{ $list->Items->isEmpty() ? 'd-none' : '' }}" data-target="list-count-container">
+                            <span class="{{ $list->Items->isEmpty() ? 'd-none' : '' }}" data-target="list-count-container-{{ $list->id }}">
                                 -
                                 <span data-target="list-item-done-count-{{ $list->id }}">
                                     {{ count($list->Items->where('done', 1)->all()) }}
