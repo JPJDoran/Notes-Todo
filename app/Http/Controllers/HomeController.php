@@ -64,7 +64,7 @@ class HomeController extends Controller
     }
 
     /**
-     * Toggle an item's status
+     * Add a new item
      * @param  Request $request [The HTTP request]
      * @return string
      */
@@ -75,8 +75,8 @@ class HomeController extends Controller
 
         // Validate the data
         $validate = Validator::make($request->all(), [
-            'listId'    => 'required|max:255|string',
-            'title'     => 'required'
+            'listId'    => 'required',
+            'title'     => 'required|string|max:255',
         ]);
 
         // Validation has failed so return error
@@ -113,5 +113,57 @@ class HomeController extends Controller
         }
 
         return response()->json(['error' => false, 'html' => view('todo/partials/listItems', compact('list'))->render()]);
+    }
+
+    /**
+     * Add a new list
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function addList(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        // Validate the data
+        $validate = Validator::make($request->all(), [
+            'title'         => 'required|string|max:255',
+            'categoryId'    => 'required',
+        ]);
+
+        // Validation has failed so return error
+        if (!$validate->passes()) {
+			return response()->json(['error' => true, 'validation' => $validate->errors(), 'message' => __('todo.form-error')]);
+        }
+
+        $insertId = TodoList::create([
+            'category_id' => $request->categoryId,
+            'title' => $request->title
+        ])->id;
+
+        return response()->json(['error' => $insertId <= 0, 'id' => $insertId]);
+    }
+
+    public function getCategoryLists(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        // No id passed
+        if (is_null($categoryId = $request->categoryId)) {
+            return response()->json(['error' => true]);
+        }
+
+        // No category found
+        if (is_null($category = Category::find($categoryId))) {
+            return response()->json(['error' => true]);
+        }
+
+        // Set default list if not passed
+        if (is_null($listId = $request->listId)) {
+            $listId = $category->Lists->first()->id;
+        }
+
+        return response()->json(['error' => false, 'html' => view('todo/partials/categoryLists', compact('category', 'listId'))->render()]);
     }
 }

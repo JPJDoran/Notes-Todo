@@ -12,6 +12,7 @@
                     <p class="mb-0 pb-0">@lang('todo.form-error')</p>
                 </div>
                 <form id="add-list-form">
+                    <input type="hidden" name="categoryId">
                     <div class="form-group">
                         <label for="list-title">@lang('todo.list-title')</label>
                         <input type="text" class="form-control" id="list-title" name="title" placeholder="E.g. Shopping List" required>

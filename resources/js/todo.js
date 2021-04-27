@@ -29,7 +29,6 @@ $(document).ready(function() {
     });
 
     // On submit of add task
-    // On new transaction form submit, attempt to add transaction
     $('#add-item-form').on('submit', function(event) {
         event.preventDefault();
 
@@ -80,7 +79,7 @@ $(document).ready(function() {
         $('#add-item-form').trigger('reset');
 
         // Hide existing messages
-        $('body').find('[data-target="transaction-alert"]').addClass('d-none');
+        $('body').find('[data-target="add-item-alert"]').addClass('d-none');
         $('body').find('.help-block').addClass('d-none');
     });
 
@@ -89,6 +88,52 @@ $(document).ready(function() {
         event.preventDefault();
 
         console.log($(this).attr('data-id'));
+    });
+
+    // User wants to add a new list
+    // On submit of add task
+    $('#add-list-form').on('submit', function(event) {
+        event.preventDefault();
+
+        let categoryId = $('body').find('[data-trigger="category-item"].disabled').attr('data-id');
+        let $alert = $('#add-list-error');
+        let form = document.getElementById('add-list-form');
+        let formData = new FormData(form);
+        formData.append('categoryId', categoryId);
+
+        // Hide existing messages
+        $('body').find('[data-target="add-list-alert"]').addClass('d-none');
+        $('body').find('.help-block').addClass('d-none');
+
+        $.ajax({
+            url: '/todo/addList',
+            type: 'POST',
+            dataType: 'JSON',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': token
+            }
+        }).done(function(data) {
+            if (data.error) {
+                // Show errors
+                $alert.find('p').html(data.message);
+
+                if (data.hasOwnProperty('validation')) {
+                    $.each(data.validation, function(index, val) {
+                        $validation = $('body').find(`[data-target="${index}-errors"]`);
+                        $validation.find('strong').html(val);
+                        $validation.removeClass('d-none');
+                    });
+                }
+
+                $alert.removeClass('d-none');
+                return;
+            }
+
+            refreshLists(categoryId, data.id);
+        });
     });
 });
 
@@ -164,5 +209,40 @@ function refreshItems(listId) {
 
         // Close modal
         $('#add-item-modal').modal('hide');
+    });
+}
+
+function refreshLists(categoryId, listId) {
+    let $categoryContainer = $('body').find('[data-target="category-container"]');
+    let $spinner = $(`#category-loading-spinner`);
+
+    $categoryContainer.addClass('d-none');
+    $spinner.removeClass('d-none');
+
+    $.ajax({
+        url: '/todo/getCategoryLists',
+        type: 'POST',
+        dataType: 'JSON',
+        data : {
+            categoryId,
+            listId
+         },
+        headers: {
+            'X-CSRF-TOKEN': token
+        }
+    }).done(function(data) {
+        if (data.error) {
+            // Ajax update of content failed so refresh full page instead
+            location.reload();
+            return;
+        }
+
+        // Update content
+        $categoryContainer.html(data.html);
+        $spinner.addClass('d-none');
+        $categoryContainer.removeClass('d-none');
+
+        // Close modal
+        $('#add-list-modal').modal('hide');
     });
 }
