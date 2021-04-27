@@ -212,4 +212,148 @@ class HomeController extends Controller
 
         return response()->json(['error' => $insertId <= 0, 'id' => $insertId]);
     }
+
+    /**
+     * Get a category by a given id
+     * @param  string $id [The id of the category]
+     * @return string
+     */
+    public function getCategory($id) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        if (is_null($category = $this->user->Categories->find($id))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        return response()->json(['error' => false, 'category' => $category]);
+    }
+
+    /**
+     * Edit a category
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function editCategory(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        // Validate the data
+        $validate = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'categoryId' => 'required',
+        ]);
+
+        // Validation has failed so return error
+        if (!$validate->passes()) {
+			return response()->json(['error' => true, 'validation' => $validate->errors(), 'message' => __('todo.form-error')]);
+        }
+
+        if (is_null($category = $this->user->Categories->find($request->categoryId))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        $category->title = $request->title;
+        $category->save();
+
+        return response()->json(['error' => false]);
+    }
+
+    /**
+     * Get a list by a given id
+     * @param  string $id [The id of the list]
+     * @return string
+     */
+    public function getList($id) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        if (is_null($list = $this->user->Lists->find($id))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        return response()->json(['error' => false, 'list' => $list]);
+    }
+
+    /**
+     * Edit a list
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function editList(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        // Validate the data
+        $validate = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'listId' => 'required',
+        ]);
+
+        // Validation has failed so return error
+        if (!$validate->passes()) {
+			return response()->json(['error' => true, 'validation' => $validate->errors(), 'message' => __('todo.form-error')]);
+        }
+
+        if (is_null($list = $this->user->Lists->find($request->listId))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        $list->title = $request->title;
+        $list->save();
+
+        return response()->json(['error' => false]);
+    }
+
+    /**
+     * Get an item by a given id
+     * @param  string $id [The id of the item]
+     * @return string
+     */
+    public function getItem($id) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        if (is_null($item = TodoItem::find($id))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        return response()->json(['error' => false, 'item' => $item]);
+    }
+
+    /**
+     * Edit an item
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function editItem(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        // Validate the data
+        $validate = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'itemId' => 'required',
+        ]);
+
+        // Validation has failed so return error
+        if (!$validate->passes()) {
+			return response()->json(['error' => true, 'validation' => $validate->errors(), 'message' => __('todo.form-error')]);
+        }
+
+        if (is_null($item = TodoItem::find($request->itemId))) {
+            return response()->json(['error' => true, 'message' => __('todo.global-error')]);
+        }
+
+        $item->title = $request->title;
+        $item->save();
+
+        return response()->json(['error' => false]);
+    }
 }

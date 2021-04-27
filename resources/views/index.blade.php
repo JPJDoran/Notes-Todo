@@ -79,4 +79,7 @@
     @include('todo.modals.add-item')
     @include('todo.modals.add-list')
     @include('todo.modals.add-category')
+    @include('todo.modals.edit-item')
+    @include('todo.modals.edit-list')
+    @include('todo.modals.edit-category')
 @endsection
