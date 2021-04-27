@@ -2,6 +2,10 @@
 
 Started 25/04/21 using a clone of a base project that is nothing more than a fresh Laravel install.
 
+On registration of a new user, a default category, list and item is added to their account to provide an example for the user to build upon. Categories can be added to group lists by a common theme for example "work", lists can be added to a category for example "presentation prep" and each list can have any number of items for example "print agenda". Users can edit categories, lists and items as they wish and can mark list items as done once complete.
+
+The system fufills the basic requirements of an MVP with some essence of flair, for example; the inclusion of user profile icons from https://eu.ui-avatars.com/.
+
 ## Installation
 
 Laravel was used for the creation of this project and was hosted locally on a docker container using docker desktop. As such, if needed please configure docker:
@@ -28,10 +32,15 @@ With docker installed we can now progress to installing the project.
 
 Known limitations:
 
--
+- The UI is a bit garish.
+- There wasn't sufficient time to refactor code, so currently everything sites in one controller. Ideally this controller could be split into a controller for 'categories', 'lists' and 'items'.
 
 ## Improvements
 
 Potential improvements:
 
--
+- Improve the UI and remove the overuse of edit icons.
+- Go back through and refactor code. As well as the controller splitting above, the js could also be improved.
+- Implement draggable or similar to provide item ordering.
+- Provide options to show/hide completed items.
+- Provide functionality to archive categories and/or lists.
