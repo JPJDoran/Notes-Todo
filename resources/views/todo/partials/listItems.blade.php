@@ -4,11 +4,20 @@
     </div>
 @else
     @foreach ($list->Items as $item)
-        <div class="form-check mt-3 mb-3">
-            <input class="form-check-input" type="checkbox" id="item-{{ $item->id }}" data-id="{{ $item->id }}" data-list-id="{{ $list->id }}" data-trigger="complete-item" {{ $item->done ? 'checked' : '' }}>
-            <label class="form-check-label {{ $item->done ? 'strikethrough' : '' }}" for="item-{{ $item->id }}">
-                {{ $item->title }}
-            </label>
+        <div class="row align-items-center">
+            <div class="col">
+                <div class="form-check mt-3 mb-3">
+                    <input class="form-check-input" type="checkbox" id="item-{{ $item->id }}" data-id="{{ $item->id }}" data-list-id="{{ $list->id }}" data-trigger="complete-item" {{ $item->done ? 'checked' : '' }}>
+                    <label class="form-check-label {{ $item->done ? 'strikethrough' : '' }}" for="item-{{ $item->id }}">
+                        {{ $item->title }}
+                    </label>
+                </div>
+            </div>
+            <div class="col-3 text-right">
+                <button class="btn btn-primary btn-sm" type="button" data-trigger="edit-item" data-id="{{ $item->id }}">
+                    <i class="fas fa-pen"></i>
+                </button>
+            </div>
         </div>
     @endforeach
 @endif

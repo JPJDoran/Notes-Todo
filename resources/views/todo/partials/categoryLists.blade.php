@@ -8,21 +8,30 @@
             <div class="card">
                 <div class="card-header" id="list-title-{{ $list->id }}">
                     <h2 class="mb-0">
-                        <button class="btn btn-link p-0" type="button" data-toggle="collapse" data-target="#list-{{ $list->id }}" aria-expanded="true" aria-controls="list-{{ $list->id }}">
-                            {{ $list->title }}
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-link p-0" type="button" data-toggle="collapse" data-target="#list-{{ $list->id }}" aria-expanded="true" aria-controls="list-{{ $list->id }}">
+                                    {{ $list->title }}
 
-                            <span class="{{ $list->Items->isEmpty() ? 'd-none' : '' }}" data-target="list-count-container-{{ $list->id }}">
-                                -
-                                <span data-target="list-item-done-count-{{ $list->id }}">
-                                    {{ count($list->Items->where('done', 1)->all()) }}
-                                </span>
-                                /
-                                <span data-target="list-item-count-{{ $list->id }}">
-                                    {{ count($list->Items) }}
-                                </span>
-                                @lang('todo.complete')
-                            </span>
-                        </button>
+                                    <span class="{{ $list->Items->isEmpty() ? 'd-none' : '' }}" data-target="list-count-container-{{ $list->id }}">
+                                        -
+                                        <span data-target="list-item-done-count-{{ $list->id }}">
+                                            {{ count($list->Items->where('done', 1)->all()) }}
+                                        </span>
+                                        /
+                                        <span data-target="list-item-count-{{ $list->id }}">
+                                            {{ count($list->Items) }}
+                                        </span>
+                                        @lang('todo.complete')
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="col text-right">
+                                <button class="btn btn-primary btn-sm" type="button" data-trigger="edit-list" data-id="{{ $list->id }}">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                            </div>
+                        </div>
                     </h2>
                 </div>
 
@@ -40,11 +49,20 @@
                                 </div>
                             @else
                                 @foreach ($list->Items as $item)
-                                    <div class="form-check mt-3 mb-3">
-                                        <input class="form-check-input" type="checkbox" id="item-{{ $item->id }}" data-id="{{ $item->id }}" data-list-id="{{ $list->id }}" data-trigger="complete-item" {{ $item->done ? 'checked' : '' }}>
-                                        <label class="form-check-label {{ $item->done ? 'strikethrough' : '' }}" for="item-{{ $item->id }}">
-                                            {{ $item->title }}
-                                        </label>
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <div class="form-check mt-3 mb-3">
+                                                <input class="form-check-input" type="checkbox" id="item-{{ $item->id }}" data-id="{{ $item->id }}" data-list-id="{{ $list->id }}" data-trigger="complete-item" {{ $item->done ? 'checked' : '' }}>
+                                                <label class="form-check-label {{ $item->done ? 'strikethrough' : '' }}" for="item-{{ $item->id }}">
+                                                    {{ $item->title }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <button class="btn btn-primary btn-sm" type="button" data-trigger="edit-item" data-id="{{ $item->id }}">
+                                                <i class="fas fa-pen"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 @endforeach
                             @endif

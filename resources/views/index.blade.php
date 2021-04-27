@@ -20,11 +20,20 @@
                             <ul class="nav list-group list-group-flush" role="tablist">
                                 @foreach ($categories as $key => $category)
                                     <li class="p-0 nav-item">
-                                        <h5>
-                                            <a class="nav-link {{ $category->id == $chosenCategory ? 'disabled' : false }}" href="/{{ $category->id }}" data-trigger="category-item" data-id="{{ $category->id }}">
-                                                {{ $category->title }}
-                                            </a>
-                                        </h5>
+                                        <div class="row">
+                                            <div class="col">
+                                                <h5>
+                                                    <a class="nav-link {{ $category->id == $chosenCategory ? 'disabled' : false }}" href="/{{ $category->id }}" data-trigger="category-item" data-id="{{ $category->id }}">
+                                                        {{ $category->title }}
+                                                    </a>
+                                                </h5>
+                                            </div>
+                                            <div class="col text-right">
+                                                <button class="btn btn-primary btn-sm" type="button" data-trigger="edit-category" data-id="{{ $category->id }}">
+                                                    <i class="fas fa-pen"></i>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </li>
                                 @endforeach
                             </ul>
