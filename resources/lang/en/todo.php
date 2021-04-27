@@ -9,8 +9,11 @@ return [
     'no-lists' => "You don't currently have any lists. Why not create one?",
     'no-items' => "You don't currently have any items. Why not create one?",
     'new-item' => 'Add Item',
+    'new-list' => 'Add List',
     'add' => 'Add',
     'item-title' => 'Title',
+    'list-title' => 'Title',
+    'category-title' => 'Title',
     'form-error' => 'There is an error with your form.',
     'complete' => 'Complete',
 

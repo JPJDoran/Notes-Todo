@@ -91,4 +91,27 @@ class HomeController extends Controller
 
         return response()->json(['error' => $insertId <= 0]);
     }
+
+    /**
+     * Get all items for a list
+     * @param  Request $request [The HTTP request]
+     * @return string
+     */
+    public function getListItems(Request $request) {
+        if (!IS_AJAX) {
+            abort('404');
+        }
+
+        // No id passed
+        if (is_null($listId = $request->listId)) {
+            return response()->json(['error' => true]);
+        }
+
+        // No list found
+        if (is_null($list = ToDoList::find($listId))) {
+            return response()->json(['error' => true]);
+        }
+
+        return response()->json(['error' => false, 'html' => view('todo/partials/listItems', compact('list'))->render()]);
+    }
 }

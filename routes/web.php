@@ -20,4 +20,5 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/todo/toggleItemCompleteStatus', [App\Http\Controllers\HomeController::class, 'toggleItemCompleteStatus']);
     Route::post('/todo/addItem', [App\Http\Controllers\HomeController::class, 'addItem']);
+    Route::post('/todo/getListItems', [App\Http\Controllers\HomeController::class, 'getListItems']);
 });
